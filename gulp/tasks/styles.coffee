@@ -21,6 +21,6 @@ gulp.task 'styles', ->
     .pipe(sass(indentedSyntax: true, outputStyle:'compressed', errorLogToConsole: true))
   .pipe(sourcemaps.write(config.paths.sourcemaps))
   .pipe(gulp.dest(config.paths.srcPath + config.filePath.css))
-  .pipe(reload({stream: true}))
+#  .pipe(reload({stream: true}))
   return
 

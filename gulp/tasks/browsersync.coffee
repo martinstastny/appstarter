@@ -2,7 +2,7 @@ config = require('../config')
 gulp = require('gulp')
 sass = require('gulp-sass')
 plumber = require('gulp-plumber')
-browserSync = require('browser-sync').create()
+browserSync = require('browser-sync')
 reload = browserSync.reload
 
 gulp.task 'browsersync', ->

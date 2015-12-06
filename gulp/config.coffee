@@ -12,17 +12,18 @@ config.filePath =
   css: 'css/'
   coffee: 'coffee/'
   js: 'js/'
-  jsGenerated: 'js/'
+  jsGenerated: 'js/generated'
 
 config.fileNames =
-  mainjsFile: 'app.coffee' # Browserify sourcefile
-  bundlejsFile: 'bundle.js' # Browserify bundlefile
+  maincssFile: 'screen.css'
+  mainjsFile: 'app.js' # Browserify sourcefile
+  mainCoffeeFile: 'app.coffee'
 
 ## File Paths ##
 config.files =
   sass: config.filePath.sass + '**/*.{sass,scss}'
   coffee: config.filePath.coffee + '**/*.coffee'
-  css: config.filePath.css + '*.css'
+  css: config.filePath.css + '**/*.css'
   js: config.filePath.js + '**/*.js'
   html: '**/*.html'
 

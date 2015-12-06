@@ -21,6 +21,7 @@ gulp.task 'coffee', ->
   .pipe(plumber())
   .pipe(changed(config.paths.srcPath + config.filePath.js, { extension: '.js'}))
   .pipe(sourcemaps.init())
-  .pipe(coffee({bare: true}))
+  .pipe(coffee({bare: true})).on 'error', onError
   .pipe(sourcemaps.write(config.paths.sourcemaps))
   .pipe(gulp.dest(config.paths.srcPath + config.filePath.jsGenerated))
+  return

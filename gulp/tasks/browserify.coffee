@@ -7,21 +7,28 @@ buffer = require('vinyl-buffer')
 source = require('vinyl-source-stream')
 plumber = require('gulp-plumber')
 coffeeify = require('coffeeify')
+handlebars = require('browserify-handlebars')
 watchify = require('watchify')
 sourcemaps = require('gulp-sourcemaps')
 uglify = require('gulp-uglify')
 gutil = require('gulp-util')
+gulpif = require('gulp-if')
 _ = require('lodash')
 
+
+# Define Browserify options
 browserifyOpts =
   debug: true
   extensions: ['.coffee', '.hbs']
-  entries: ['./src/coffee/app.coffee']
+  entries: ['./' + config.paths.srcPath + config.filePath.coffee + config.fileNames.mainCoffeeFile]
+  transform: [coffeeify, handlebars]
+
+buildFlag = false
 
 ## On error handler
 onError = (err) ->
   gutil.beep()
-  gutil.log(gutil.colors.yellow(err.toString()))
+  gutil.log(gutil.colors.red(err.toString()))
   this.emit('end')
 
 prepareBundle = (watch) ->
@@ -31,8 +38,6 @@ prepareBundle = (watch) ->
     b = watchify(browserify(opts))
   else
     b = browserify(opts)
-
-  b.transform(coffeeify)
 
   b.on('log', gutil.log)
   b.on('error', gutil.log)
@@ -45,10 +50,12 @@ prepareBundle = (watch) ->
 makeBundle = (b) ->
   b.bundle()
   .on('error', onError)
-  .pipe(source(config.fileNames.bundlejsFile))
+  .pipe(source('bundle.js'))
   .pipe(buffer())
-  .pipe(uglify())
-  .pipe(gulp.dest(config.paths.srcPath + config.filePath.js))
+  .pipe(sourcemaps.init({loadMaps: true}))
+  .pipe(gulpif(buildFlag, uglify()))
+  .pipe(sourcemaps.write())
+  .pipe(gulp.dest(config.paths.srcPath + config.filePath.jsGenerated))
   .pipe(reload({stream: true, once: true}))
 
 
@@ -58,4 +65,5 @@ gulp.task 'browserify', ->
 
 ## Use when building without watcher ##
 gulp.task 'browserifybuild', ->
+  buildFlag = true
   prepareBundle(false)
